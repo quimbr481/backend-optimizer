@@ -1,0 +1,1 @@
+{ "name": "bz7-admin-panel", "private": true, "scripts": { "start": "node server.js", "set-password": "node server.js --set-password" }, "dependencies": { "firebase-admin": "^12.6.0" } }

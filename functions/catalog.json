@@ -1,0 +1,547 @@
+[
+ {
+  "id": "cpu.prio",
+  "cat": "Performance",
+  "title": "Separação de prioridade (Win32PrioritySeparation)",
+  "evidence": "community",
+  "risk": "low",
+  "admin": true,
+  "desc": "Define quantum curto/fixo com boost 3:1 para a janela em primeiro plano (0x2A). O padrão de cliente (0x02) já usa quantum curto e variável; a diferença prática costuma ser pequena e depende do jogo — meça.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\PriorityControl",
+    "name": "Win32PrioritySeparation",
+    "type": "REG_DWORD",
+    "value": 42
+   }
+  ]
+ },
+ {
+  "id": "cpu.mmcss",
+  "cat": "Performance",
+  "title": "Perfil MMCSS \"Games\" (prioridade de agendamento)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "Parâmetros documentados do Multimedia Class Scheduler: Priority 6 e Scheduling Category High para tarefas \"Games\".",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+    "name": "Priority",
+    "type": "REG_DWORD",
+    "value": 6
+   },
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+    "name": "Scheduling Category",
+    "type": "REG_SZ",
+    "value": "High"
+   },
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+    "name": "GPU Priority",
+    "type": "REG_DWORD",
+    "value": 8
+   },
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile\\Tasks\\Games",
+    "name": "SFIO Priority",
+    "type": "REG_SZ",
+    "value": "High"
+   }
+  ]
+ },
+ {
+  "id": "cpu.sysresp",
+  "cat": "Performance",
+  "title": "SystemResponsiveness = 10",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "Percentual de CPU reservado a tarefas de baixa prioridade quando há tarefas multimídia/jogo ativas. Padrão 20.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+    "name": "SystemResponsiveness",
+    "type": "REG_DWORD",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "id": "cpu.throttle",
+  "cat": "Performance",
+  "title": "Desativar Power Throttling (EcoQoS)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "Impede o Windows de limitar processos em segundo plano via EcoQoS. Mais útil em notebooks.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling",
+    "name": "PowerThrottlingOff",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "cpu.timerres",
+  "cat": "Performance",
+  "title": "Restaurar resolução global de timer (Windows 11)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "reboot": true,
+  "desc": "GlobalTimerResolutionRequests=1 restaura o comportamento em que um app que pede timer de alta resolução afeta o sistema todo (Win11 e Server 2022+). Aumenta um pouco o consumo de energia.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\kernel",
+    "name": "GlobalTimerResolutionRequests",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "net.throttleidx",
+  "cat": "Performance",
+  "title": "NetworkThrottlingIndex = desativado",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "Remove o limite de pacotes/ms para tráfego não-multimídia enquanto há mídia tocando (padrão 10).",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Multimedia\\SystemProfile",
+    "name": "NetworkThrottlingIndex",
+    "type": "REG_DWORD",
+    "value": 4294967295
+   }
+  ]
+ },
+ {
+  "id": "game.mode",
+  "cat": "Gaming",
+  "title": "Game Mode ativado",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "Ativa o Game Mode do Windows (prioriza o jogo e evita instalação de drivers via Windows Update durante a sessão).",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\GameBar",
+    "name": "AutoGameModeEnabled",
+    "type": "REG_DWORD",
+    "value": 1
+   },
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\GameBar",
+    "name": "AllowAutoGameMode",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "game.dvr",
+  "cat": "Gaming",
+  "title": "Desativar captura em segundo plano (Game DVR)",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "Desliga a gravação em segundo plano da Xbox Game Bar, que consome GPU/disco.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "System\\GameConfigStore",
+    "name": "GameDVR_Enabled",
+    "type": "REG_DWORD",
+    "value": 0
+   },
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\GameDVR",
+    "name": "AppCaptureEnabled",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ },
+ {
+  "id": "game.fso",
+  "cat": "Gaming",
+  "title": "Otimizações de tela cheia: modo exclusivo (global)",
+  "evidence": "community",
+  "risk": "low",
+  "desc": "Faz o Windows respeitar tela cheia exclusiva em vez de \"fullscreen otimizado\". Alguns jogos ganham consistência, outros não — meça.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "System\\GameConfigStore",
+    "name": "GameDVR_FSEBehaviorMode",
+    "type": "REG_DWORD",
+    "value": 2
+   },
+   {
+    "hive": "HKCU",
+    "path": "System\\GameConfigStore",
+    "name": "GameDVR_HonorUserFSEBehaviorMode",
+    "type": "REG_DWORD",
+    "value": 1
+   },
+   {
+    "hive": "HKCU",
+    "path": "System\\GameConfigStore",
+    "name": "GameDVR_DXGIHonorFSEWindowsCompatible",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "gpu.hags",
+  "cat": "Gaming",
+  "title": "Agendamento de GPU acelerado por hardware (HAGS)",
+  "evidence": "community",
+  "risk": "medium",
+  "admin": true,
+  "reboot": true,
+  "desc": "HwSchMode=2 liga o HAGS (requer GPU/driver compatíveis). Pode melhorar ou piorar conforme o jogo/driver; recomendo medir. Desfazer retorna ao valor anterior.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers",
+    "name": "HwSchMode",
+    "type": "REG_DWORD",
+    "value": 2
+   }
+  ]
+ },
+ {
+  "id": "gpu.mpo",
+  "cat": "Gaming",
+  "title": "Desativar MPO (Multiplane Overlay)",
+  "evidence": "workaround",
+  "risk": "medium",
+  "admin": true,
+  "reboot": true,
+  "desc": "OverlayTestMode=5 desativa o MPO no DWM. É uma correção para flicker/stutter/tela preta em alguns drivers — NÃO é um ganho geral de latência. Aplique só se tiver o sintoma.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows\\Dwm",
+    "name": "OverlayTestMode",
+    "type": "REG_DWORD",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "id": "gpu.tdr",
+  "cat": "Gaming",
+  "title": "TdrDelay = 10 s (estabilidade sob carga alta)",
+  "evidence": "workaround",
+  "risk": "low",
+  "admin": true,
+  "reboot": true,
+  "desc": "Aumenta o tempo antes do Windows reiniciar o driver gráfico (padrão 2 s). Evita falsos timeouts em cargas pesadas; não reduz latência.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers",
+    "name": "TdrDelay",
+    "type": "REG_DWORD",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "id": "mem.nopageexec",
+  "cat": "Performance",
+  "title": "DisablePagingExecutive (manter kernel/drivers na RAM)",
+  "evidence": "documented",
+  "risk": "medium",
+  "admin": true,
+  "reboot": true,
+  "desc": "Impede que o código do kernel e drivers sejam paginados para o disco. Só faz sentido com RAM de sobra (≥16 GB).",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management",
+    "name": "DisablePagingExecutive",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "io.ntfsmem",
+  "cat": "Storage",
+  "title": "NtfsMemoryUsage = 2 (cache NTFS maior)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "reboot": true,
+  "desc": "Aumenta o pool paginado usado pelo NTFS (equivale a \"fsutil behavior set memoryusage 2\"). Ajuda com muitos arquivos pequenos; não afeta FPS diretamente.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+    "name": "NtfsMemoryUsage",
+    "type": "REG_DWORD",
+    "value": 2
+   }
+  ]
+ },
+ {
+  "id": "io.8dot3",
+  "cat": "Storage",
+  "title": "Desativar criação de nomes 8.3 no NTFS",
+  "evidence": "documented",
+  "risk": "medium",
+  "admin": true,
+  "reboot": true,
+  "desc": "Reduz overhead em diretórios grandes. Instaladores muito antigos podem depender de nomes 8.3; por isso é marcado como risco médio.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+    "name": "NtfsDisable8dot3NameCreation",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "io.lastaccess",
+  "cat": "Storage",
+  "title": "Desativar atualização de \"último acesso\" (NTFS)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "reboot": true,
+  "desc": "Evita uma escrita de metadados a cada leitura de arquivo. Em Windows 10/11 o padrão já é gerenciado pelo sistema.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SYSTEM\\CurrentControlSet\\Control\\FileSystem",
+    "name": "NtfsDisableLastAccessUpdate",
+    "type": "REG_DWORD",
+    "value": 2147483649
+   }
+  ]
+ },
+ {
+  "id": "input.mouseaccel",
+  "cat": "Performance",
+  "title": "Desativar \"Aprimorar precisão do ponteiro\" (aceleração)",
+  "evidence": "documented",
+  "risk": "low",
+  "group": "mouse",
+  "desc": "Remove a aceleração do ponteiro no Windows (MouseSpeed/Threshold = 0). Não altera sua sensibilidade (mantém o controle deslizante). Aplicado imediatamente.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Control Panel\\Mouse",
+    "name": "MouseSpeed",
+    "type": "REG_SZ",
+    "value": "0"
+   },
+   {
+    "hive": "HKCU",
+    "path": "Control Panel\\Mouse",
+    "name": "MouseThreshold1",
+    "type": "REG_SZ",
+    "value": "0"
+   },
+   {
+    "hive": "HKCU",
+    "path": "Control Panel\\Mouse",
+    "name": "MouseThreshold2",
+    "type": "REG_SZ",
+    "value": "0"
+   }
+  ],
+  "live": {
+   "kind": "mouse",
+   "args": [
+    0,
+    0,
+    0
+   ]
+  },
+  "liveUndo": {
+   "kind": "mousePrev"
+  }
+ },
+ {
+  "id": "input.kbrepeat",
+  "cat": "Performance",
+  "title": "Teclado: delay curto e repetição rápida",
+  "evidence": "documented",
+  "risk": "low",
+  "group": "keyboard",
+  "desc": "KeyboardDelay=0 (250 ms) e KeyboardSpeed=31 (~30 car/s). Afeta somente repetição ao segurar tecla, não o tempo de resposta do primeiro toque.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Control Panel\\Keyboard",
+    "name": "KeyboardDelay",
+    "type": "REG_SZ",
+    "value": "0"
+   },
+   {
+    "hive": "HKCU",
+    "path": "Control Panel\\Keyboard",
+    "name": "KeyboardSpeed",
+    "type": "REG_SZ",
+    "value": "31"
+   }
+  ],
+  "live": {
+   "kind": "kb",
+   "args": [
+    0,
+    31
+   ]
+  },
+  "liveUndo": {
+   "kind": "kbPrev"
+  }
+ },
+ {
+  "id": "bg.apps",
+  "cat": "Background apps",
+  "title": "Bloquear apps UWP em segundo plano (global)",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "GlobalUserDisabled=1 impede apps da Store de rodarem em segundo plano.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications",
+    "name": "GlobalUserDisabled",
+    "type": "REG_DWORD",
+    "value": 1
+   }
+  ]
+ },
+ {
+  "id": "ntf.tips",
+  "cat": "Notifications",
+  "title": "Desativar dicas, sugestões e conteúdo promovido",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "Desliga ContentDeliveryManager (sugestões no Iniciar, dicas de tela de bloqueio, apps promovidos).",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+    "name": "SubscribedContent-338389Enabled",
+    "type": "REG_DWORD",
+    "value": 0
+   },
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+    "name": "SystemPaneSuggestionsEnabled",
+    "type": "REG_DWORD",
+    "value": 0
+   },
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager",
+    "name": "SoftLandingEnabled",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ },
+ {
+  "id": "priv.adid",
+  "cat": "Privacy",
+  "title": "Desativar ID de publicidade",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "Impede apps de usarem seu ID de publicidade.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo",
+    "name": "Enabled",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ },
+ {
+  "id": "priv.telemetry",
+  "cat": "Privacy",
+  "title": "Telemetria no nível mínimo (política)",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "AllowTelemetry=0 só é respeitado em Enterprise/Education; em Home/Pro o Windows trata como 1 (Obrigatório). Não afeta atualizações nem o Defender.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection",
+    "name": "AllowTelemetry",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ },
+ {
+  "id": "upd.dopt",
+  "cat": "Updates",
+  "title": "Delivery Optimization sem P2P",
+  "evidence": "documented",
+  "risk": "low",
+  "admin": true,
+  "desc": "DODownloadMode=0 impede o PC de enviar partes de atualizações a outros PCs (menos tráfego de upload em segundo plano). As atualizações continuam funcionando.",
+  "changes": [
+   {
+    "hive": "HKLM",
+    "path": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config",
+    "name": "DODownloadMode",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ },
+ {
+  "id": "perf.visualfx",
+  "cat": "Performance",
+  "title": "Efeitos visuais: melhor desempenho + sem transparência",
+  "evidence": "documented",
+  "risk": "low",
+  "desc": "VisualFXSetting=2 e transparência desativada. Libera um pouco de GPU/CPU no desktop.",
+  "changes": [
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects",
+    "name": "VisualFXSetting",
+    "type": "REG_DWORD",
+    "value": 2
+   },
+   {
+    "hive": "HKCU",
+    "path": "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+    "name": "EnableTransparency",
+    "type": "REG_DWORD",
+    "value": 0
+   }
+  ]
+ }
+]
